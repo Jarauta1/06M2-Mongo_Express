@@ -36,23 +36,45 @@ app.post("/api/anyadir", function(req, res) {
         patas: req.body.patas,
     }
 
-    db.collection("tienda").insertOne(tienda, function(err, respuesta) {
+    db.collection("tienda").insertOne(mesa, function(err, datos) {
         if (err !== null) {
             console.log(err),
                 res.send({ mensaje: "Ha habido un error." + err })
         } else {
-            db.collection("tienda").find().toArray(function(err, datos) {
-                if (err !== null) {
-                    console.log(err)
-                    res.send({ mensaje: "Error:" + err })
-                } else {
-                    console.log(datos)
-                    res.send(datos)
-                }
-            })
+            res.send(datos)
         }
     })
 
+})
+
+app.put("/api/modificar/:color", function(req, res) {
+
+    let colorModificar = req.params.color
+
+
+
+    db.collection("tienda").updateMany({ color: colorModificar }, { $set: { color: "Granate" } }, (function(err, datos) {
+        if (err !== null) {
+            console.log(err)
+            res.send({ mensaje: "Error:" + err })
+        } else {
+            res.send(datos)
+        }
+    }))
+})
+
+app.delete("/api/borrar/:patas", function(req, res) {
+
+    let patasModificar = parseInt(req.params.patas)
+
+    db.collection("tienda").deleteMany({ patas: patasModificar }, (function(err, datos) {
+        if (err !== null) {
+            console.log(err)
+            res.send({ mensaje: "Error:" + err })
+        } else {
+            res.send(datos)
+        }
+    }))
 })
 
 
